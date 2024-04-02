@@ -1,7 +1,12 @@
 package com.example.getapplications;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,8 +22,19 @@ public class MainActivity extends AppCompatActivity {
         Button button = findViewById(R.id.button);
 
         button.setOnClickListener(v -> {
-            AppInfoFetcher appInfoFetcher = new AppInfoFetcher(MainActivity.this);
-            appInfoFetcher.getAllInstalledApps();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if (!Environment.isExternalStorageManager()) {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                    startActivity(intent);
+                    return;
+                }
+                AppInfoFetcher appInfoFetcher = new AppInfoFetcher(MainActivity.this);
+                appInfoFetcher.getAllInstalledApps();
+            } else {
+                AppInfoFetcher appInfoFetcher = new AppInfoFetcher(MainActivity.this);
+                appInfoFetcher.getAllInstalledApps();
+            }
+            Toast.makeText(this, "应用信息导出完成", Toast.LENGTH_SHORT).show();
         });
     }
 }

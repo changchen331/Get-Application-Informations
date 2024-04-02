@@ -1,7 +1,6 @@
 package com.example.getapplications.model;
 
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 

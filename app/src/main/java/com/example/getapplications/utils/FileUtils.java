@@ -83,8 +83,7 @@ public class FileUtils {
             // 检查文件是否存在，如果不存在则创建
             if (!file.exists()) {
                 // 尝试创建新文件
-                boolean newFile = file.createNewFile();
-                if (!newFile) {
+                if (!file.createNewFile()) {
                     // 如果无法创建文件，记录错误日志
                     Log.e(TAG, "无法创建文件: " + fileName);
                 }
@@ -94,6 +93,7 @@ public class FileUtils {
             Log.e(TAG, "生成文件错误: " + e);
         }
         // 返回文件的File对象
+        Log.e("FileUtils", file.getAbsolutePath());
         return file;
     }
 
@@ -125,5 +125,6 @@ public class FileUtils {
             }
         }
         // 如果文件夹已存在，则不需要执行任何操作
+        Log.e("FileUtils", directory.getAbsolutePath());
     }
 }
