@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/application_selection_item"
+    android:id="@+id/item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -12,7 +12,7 @@
 
     <!-- APP 图标 -->
     <ImageView
-        android:id="@+id/application_selection_item_image"
+        android:id="@+id/item_image"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
@@ -22,7 +22,7 @@
 
     <!-- APP 信息 -->
     <TextView
-        android:id="@+id/application_selection_item_text"
+        android:id="@+id/item_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"

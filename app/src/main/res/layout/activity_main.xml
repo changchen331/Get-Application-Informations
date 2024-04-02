@@ -20,14 +20,16 @@
         android:textSize="30sp"
         android:textStyle="bold" />
 
-    <!-- 应用选择框 -->
+    <!-- 应用信息显示框 -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/application_selection"
+        android:id="@+id/application_information"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:scrollbars="horizontal" />
+        android:scrollbars="horizontal"
+        android:visibility="invisible" />
 
+    <!-- 获取应用信息按钮 -->
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
