@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Get Applications</string>
+
+    <!-- 存放应用数据的文件 名称 -->
+    <string name="file_name">Apps.txt</string>
+    <!-- 存放应用数据的文件 路径 -->
+    <string name="target_directory">Download</string>
+
 </resources>
