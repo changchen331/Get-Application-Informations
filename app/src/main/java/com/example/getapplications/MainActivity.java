@@ -25,6 +25,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private List<AppInfo> apps; // 应用信息列表
+    Boolean isButtonPressed = Boolean.FALSE; // 按钮是否被点击
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,23 +41,27 @@ public class MainActivity extends AppCompatActivity {
         // 获取应用数据按钮
         Button button = findViewById(R.id.button);
         button.setOnClickListener(v -> {
-            // 初始化滚动弹窗
-            initRecyclerView(recyclerView);
+            if (!isButtonPressed) {
+                // 初始化滚动弹窗
+                initRecyclerView(recyclerView);
 
-            // 显示滚动弹窗
-            recyclerView.setVisibility(View.VISIBLE);
+                // 显示滚动弹窗
+                recyclerView.setVisibility(View.VISIBLE);
 
-            // 写入文件（仅安卓系统）
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if (!Environment.isExternalStorageManager()) {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                    startActivity(intent);
-                    return;
+                // 写入文件（仅安卓系统）
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    if (!Environment.isExternalStorageManager()) {
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                        startActivity(intent);
+                        return;
+                    }
                 }
-            }
-            writeIntoFile(MainActivity.this);
+                writeIntoFile(MainActivity.this);
 
-            Toast.makeText(this, "应用信息导出完成", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "应用信息导出完成", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "应用信息导出完成", Toast.LENGTH_LONG).show();
+            }
         });
     }
 
