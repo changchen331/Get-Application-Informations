@@ -77,11 +77,4 @@ public class AppInfo {
                 ", isSystemApp=" + isSystemApp +
                 '}';
     }
-
-    public void print() {
-        Log.v("appInfo", "应用名称: " + appName + " -> 应用包名: " + packageName);
-        Log.v("appInfo", "应用名称: " + appName + " -> 应用类名: " + className);
-        Log.v("appInfo", "应用名称: " + appName + " -> 版本号: " + versionName);
-        Log.v("appInfo", "应用名称: " + appName + " -> 是否为系统应用: " + isSystemApp);
-    }
 }

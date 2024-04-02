@@ -8,13 +8,10 @@ import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.util.Log;
 
-
 import com.example.getapplications.R;
 import com.example.getapplications.model.AppInfo;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,14 +27,7 @@ public class AppInfoFetcher {
     }
 
     @SuppressLint("QueryPermissionsNeeded")
-    public List<AppInfo> getAllInstalledApps() {
-        if (context == null) {
-            // 提供一个空列表，因为没有有效的 context 来获取应用信息
-            return Collections.emptyList();
-        }
-
-        // 用于存放应用数据
-        List<AppInfo> appList = new ArrayList<>();
+    public void getAllInstalledApps() {
         // 正则表达式（匹配'.'）
         Pattern pattern = Pattern.compile("\\.");
 
@@ -71,7 +61,6 @@ public class AppInfoFetcher {
                             appInfo.setVersionName(aPackage.versionName);
                             appInfo.setAppIcon(aPackage.applicationInfo.loadIcon(packageManager));
                             appInfo.setSystemApp((aPackage.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
-                            appList.add(appInfo);
 
                             if (packages.indexOf(aPackage) == 0) {
                                 // 覆写
@@ -88,7 +77,5 @@ public class AppInfoFetcher {
             // 处理获取应用信息时可能发生的异常
             Log.e("getAllInstalledApps", "Failed to get installed apps", e);
         }
-
-        return appList;
     }
 }
