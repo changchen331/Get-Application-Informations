@@ -6,6 +6,10 @@
     <!-- 存放应用数据的文件 路径 -->
     <string name="target_directory">Download</string>
 
+    <string name="title">Get App Info</string>
+
     <string name="button">获取应用信息</string>
+
+    <string name="item_name">应用名称</string>
 
 </resources>

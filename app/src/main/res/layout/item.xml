@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/application_selection_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="horizontal"
+    android:paddingStart="10dp"
+    android:paddingTop="6dp"
+    android:paddingEnd="10dp"
+    android:paddingBottom="6dp">
+
+    <!-- APP 图标 -->
+    <ImageView
+        android:id="@+id/application_selection_item_image"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:importantForAccessibility="no"
+        android:scaleType="fitCenter"
+        android:src="@drawable/application_selection_item_default" />
+
+    <!-- APP 信息 -->
+    <TextView
+        android:id="@+id/application_selection_item_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:autoSizeMaxTextSize="30sp"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeStepGranularity="2sp"
+        android:autoSizeTextType="uniform"
+        android:autofillHints="text"
+        android:gravity="start"
+        android:text="@string/item_name"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+</LinearLayout>
