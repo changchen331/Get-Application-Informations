@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
                 AppInfoFetcher appInfoFetcher = new AppInfoFetcher(MainActivity.this);
                 appInfoFetcher.getAllInstalledApps();
             }
-            Toast.makeText(this, "应用信息导出完成", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "应用信息导出完成", Toast.LENGTH_LONG).show();
         });
     }
 }
