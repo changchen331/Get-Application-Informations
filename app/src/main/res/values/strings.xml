@@ -8,7 +8,8 @@
 
     <string name="title">Get App Info</string>
 
-    <string name="button">获取应用信息</string>
+    <string name="button_getInfo">获取信息</string>
+    <string name="button_openApp">跳转应用</string>
 
     <string name="item_name">应用名称</string>
 

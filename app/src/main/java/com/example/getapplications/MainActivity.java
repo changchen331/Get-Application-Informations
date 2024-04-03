@@ -1,7 +1,9 @@
 package com.example.getapplications;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,43 +27,44 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private List<AppInfo> apps; // 应用信息列表
-    Boolean isButtonPressed = Boolean.FALSE; // 按钮是否被点击
+    private Integer position = 0; // 应用选择下标
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 获取应用数据
-        apps = getApplicationInformation(MainActivity.this);
-
         // 应用信息滚动弹窗
         RecyclerView recyclerView = findViewById(R.id.application_information);
 
         // 获取应用数据按钮
-        Button button = findViewById(R.id.button);
-        button.setOnClickListener(v -> {
-            if (!isButtonPressed) {
-                // 初始化滚动弹窗
-                initRecyclerView(recyclerView);
-
-                // 显示滚动弹窗
-                recyclerView.setVisibility(View.VISIBLE);
-
-                // 写入文件（仅安卓系统）
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    if (!Environment.isExternalStorageManager()) {
-                        Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                        startActivity(intent);
-                        return;
-                    }
+        Button buttonGetInfo = findViewById(R.id.button_getInfo);
+        buttonGetInfo.setOnClickListener(v -> {
+            // 获取应用数据
+            apps = getApplicationInformation(MainActivity.this);
+            // 初始化滚动弹窗
+            initRecyclerView(recyclerView);
+            // 显示滚动弹窗
+            recyclerView.setVisibility(View.VISIBLE);
+            // 写入文件（仅安卓系统）
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if (!Environment.isExternalStorageManager()) {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                    startActivity(intent);
+                    return;
                 }
-                writeIntoFile(MainActivity.this);
-
-                Toast.makeText(this, "应用信息导出完成", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "应用信息导出完成", Toast.LENGTH_LONG).show();
             }
+            writeIntoFile(MainActivity.this);
+            Toast.makeText(this, "应用信息导出完成", Toast.LENGTH_LONG).show();
+        });
+
+        // 跳转应用按钮
+        Button buttonOpenApp = findViewById(R.id.button_openApp);
+        buttonOpenApp.setOnClickListener(v -> {
+            // 获取选择的应用信息
+            AppInfo selectedApp = apps.get(position);
+            // 打开应用
+            openApplication(MainActivity.this, selectedApp);
         });
     }
 
@@ -89,6 +92,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 初始化滚动视图
+     *
+     * @param recyclerView 滚动视图对象
+     */
     private void initRecyclerView(RecyclerView recyclerView) {
         // 应用选择视图
         if (recyclerView == null) {
@@ -107,8 +115,19 @@ public class MainActivity extends AppCompatActivity {
         RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(apps);
         // 将 recyclerViewAdapter 设置为 recyclerView 的适配器
         recyclerView.setAdapter(recyclerViewAdapter);
+        // 点击 项视图（itemView）获取所选应用的下标
+        recyclerViewAdapter.setOnItemClickListener((view, position) -> {
+            if (position >= 0 && position < apps.size()) {
+                this.position = position;
+            }
+        });
     }
 
+    /**
+     * 写入文件
+     *
+     * @param context 指定环境
+     */
     private void writeIntoFile(Context context) {
         // 获取外部存储的绝对路径
         String absolutePath = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -123,6 +142,30 @@ public class MainActivity extends AppCompatActivity {
                 // 追加
                 FileUtils.writeTxtToFile(app.toString(), filePath, context.getString(R.string.file_name), Boolean.TRUE);
             }
+        }
+    }
+
+    /**
+     * 启动指定应用
+     *
+     * @param context 指定环境
+     * @param app     应用信息
+     */
+    private void openApplication(Context context, AppInfo app) {
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            Intent intent = packageManager.getLaunchIntentForPackage(app.getPackageName());
+            if (intent != null) {
+                context.startActivity(intent); //启动应用
+            } else {
+                // 处理无法获取启动 Intent 的情况
+                Log.e("AppLauncher", "No launch intent found for package: " + app.getPackageName());
+                Toast.makeText(context, "无法启动应用。", Toast.LENGTH_SHORT).show();
+            }
+        } catch (ActivityNotFoundException e) {
+            // 处理无法找到对应的 Activity 的情况
+            Log.e("AppLauncher", "Activity not found for package: " + app.getPackageName(), e);
+            Toast.makeText(context, "没有权限启动应用。", Toast.LENGTH_SHORT).show();
         }
     }
 }

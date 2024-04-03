@@ -28,33 +28,51 @@ public class AppInfoFetcher {
     public List<AppInfo> getAllInstalledApps() {
         // 用于存放应用数据
         List<AppInfo> appList = new ArrayList<>();
+
+        // 获取 PackageManager 实例
+        PackageManager packageManager = context.getPackageManager();
+        // 获取所有应用包信息
+        List<PackageInfo> packages = packageManager.getInstalledPackages(PackageManager.GET_ACTIVITIES);
+
+        // 筛选应用
         // 正则表达式（匹配'.'）
         Pattern pattern = Pattern.compile("\\.");
+        for (PackageInfo aPackage : packages) {
+            Matcher matcher = pattern.matcher(aPackage.applicationInfo.loadLabel(packageManager).toString());
+            if (matcher.find() || aPackage.applicationInfo.className == null ||
+                    aPackage.applicationInfo.loadIcon(packageManager) == null ||
+                    aPackage.activities == null) continue;
 
-        // 获取PackageManager实例
-        PackageManager packageManager = context.getPackageManager();
-        try {
-            List<PackageInfo> packages = packageManager.getInstalledPackages(PackageManager.GET_ACTIVITIES);
-            // 过滤应用包信息（筛选需要的应用信息）
-            for (PackageInfo aPackage : packages) {
-                Matcher matcher = pattern.matcher(aPackage.applicationInfo.loadLabel(packageManager).toString());
-                if (!matcher.find() && aPackage.applicationInfo.className != null) {
-                    // 应用名称不包含‘.’ && 类名不为空
-                    // 获取信息
-                    AppInfo appInfo = new AppInfo();
-                    appInfo.setAppName(aPackage.applicationInfo.loadLabel(packageManager).toString());
-                    appInfo.setPackageName(aPackage.packageName);
-                    appInfo.setClassName(aPackage.applicationInfo.className);
-                    appInfo.setVersionName(aPackage.versionName);
-                    appInfo.setAppIcon(aPackage.applicationInfo.loadIcon(packageManager));
-                    appInfo.setSystemApp((aPackage.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
-                    appList.add(appInfo);
-                }
+            // 是否为系统应用
+            if ((aPackage.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+                // 非系统应用（第三方应用）
+                AppInfo appInfo = new AppInfo();
+                appInfo.setAppName(aPackage.applicationInfo.loadLabel(packageManager).toString());
+                appInfo.setPackageName(aPackage.packageName);
+                appInfo.setClassName(aPackage.applicationInfo.className);
+                appInfo.setVersionName(aPackage.versionName);
+                appInfo.setAppIcon(aPackage.applicationInfo.loadIcon(packageManager));
+                appInfo.setActivities(aPackage.activities);
+                appInfo.setSystemApp((aPackage.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
+                appList.add(appInfo);
+//                Log.v("activities", appInfo.getAppName() + " -> " + aPackage.activities.length);
+            } else {
+                // 系统应用
+                // 获取系统应用的所有活动（Activity）
+                if (aPackage.activities.length < 20) continue;
+
+                AppInfo appInfo = new AppInfo();
+                appInfo.setAppName(aPackage.applicationInfo.loadLabel(packageManager).toString());
+                appInfo.setPackageName(aPackage.packageName);
+                appInfo.setClassName(aPackage.applicationInfo.className);
+                appInfo.setVersionName(aPackage.versionName);
+                appInfo.setAppIcon(aPackage.applicationInfo.loadIcon(packageManager));
+                appInfo.setSystemApp((aPackage.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
+                appList.add(appInfo);
+//                Log.v("activities", appInfo.getAppName() + " -> " + aPackage.activities.length);
             }
-        } catch (Exception e) {
-            // 处理获取应用信息时可能发生的异常
-            Log.e("getAllInstalledApps", "Failed to get installed apps", e);
         }
+        Log.v("activities", String.valueOf(appList.size()));
         return appList;
     }
 }

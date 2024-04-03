@@ -17,13 +17,25 @@ import java.util.List;
 
 /**
  * 用于在 RecyclerView 中显示应用信息列表的适配器
+ * 负责将数据集合中的数据显示在 RecyclerView 上，并处理数据的操作，同时支持点击事件回调
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private final List<AppInfo> apps; // 存储应用信息列表
+    private int position = 0; // 记录当前选中 item 的位置
+    private OnItemClickListener onItemClickListener; // 定义点击事件的回调接口
 
     public RecyclerViewAdapter(List<AppInfo> apps) {
         this.apps = apps;
+    }
+
+    /**
+     * 设置点击事件回调接口
+     *
+     * @param onItemClickListener 点击事件的回调接口
+     */
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     /**
@@ -57,7 +69,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         String packageName = app.getPackageName();
         String className = app.getClassName();
         String versionName = app.getVersionName();
-        String isSystemApp = app.isSystemApp() ? "是" : "否";
+        String isSystemApp = app.getSystemApp() ? "是" : "否";
 
         String appInfo = "名称：" + appName + "\n" +
                 "包名：" + packageName + "\n" +
@@ -68,6 +80,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         viewHolder.appInfo.setText(appInfo);
         // 设置应用图标
         viewHolder.appIcon.setImageDrawable(app.getAppIcon());
+
+        // 设置 item 视图的选中状态
+        viewHolder.itemView.setSelected(position == this.position);
     }
 
     /**
@@ -81,9 +96,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     /**
+     * 定义点击事件的回调接口
+     */
+    public interface OnItemClickListener {
+        /**
+         * 处理 item 的点击事件
+         *
+         * @param itemView 被点击的 item 视图
+         * @param position 被点击 item 的位置
+         */
+        void onItemClick(View itemView, int position);
+    }
+
+    /**
      * ViewHolder 内部类，用于缓存 item 视图中各个子视图的引用
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView appInfo; // 应用信息
         ImageView appIcon; // 应用图标
 
@@ -91,6 +119,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             super(itemView);
             appInfo = itemView.findViewById(R.id.item_text);
             appIcon = itemView.findViewById(R.id.item_image);
+
+            // 设置点击事件
+            itemView.setOnClickListener(v -> {
+                if (onItemClickListener != null) {
+                    if (getAdapterPosition() != position) {
+                        // 取消上个 item 的勾选状态
+                        notifyItemChanged(position);
+                        // 如果点击的不是当前选中的 item，则更新 selectedPosition 为新点击的 position
+                        position = getAdapterPosition();
+                        // 通知选中状态变化
+                        notifyItemChanged(position);
+                    }
+                    // 触发点击事件的回调
+                    onItemClickListener.onItemClick(itemView, position);
+                }
+            });
         }
     }
 }

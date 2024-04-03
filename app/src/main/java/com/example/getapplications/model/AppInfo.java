@@ -1,5 +1,6 @@
 package com.example.getapplications.model;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
@@ -8,12 +9,13 @@ import androidx.annotation.NonNull;
  * 应用信息
  */
 public class AppInfo {
-    private String appName; //应用名称
-    private String packageName; //应用包名（用于启动应用）
-    private String className; //应用类名（用于启动应用）
-    private String versionName; //版本名称
-    private Drawable appIcon; //应用图标
-    private boolean isSystemApp; //是否为系统应用
+    private String appName; // 应用名称
+    private String packageName; // 应用包名
+    private String className; // 应用类名
+    private String versionName; // 版本名称
+    private Drawable appIcon; // 应用图标
+    private ActivityInfo[] activities; // 应用活动
+    private Boolean isSystemApp; //是否为系统应用
 
     public String getAppName() {
         return appName;
@@ -55,14 +57,21 @@ public class AppInfo {
         this.appIcon = appIcon;
     }
 
-    public boolean isSystemApp() {
+    public ActivityInfo[] getActivities() {
+        return activities;
+    }
+
+    public void setActivities(ActivityInfo[] activities) {
+        this.activities = activities;
+    }
+
+    public Boolean getSystemApp() {
         return isSystemApp;
     }
 
-    public void setSystemApp(boolean systemApp) {
+    public void setSystemApp(Boolean systemApp) {
         isSystemApp = systemApp;
     }
-
 
     @NonNull
     @Override

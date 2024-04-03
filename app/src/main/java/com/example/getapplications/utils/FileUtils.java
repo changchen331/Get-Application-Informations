@@ -93,7 +93,6 @@ public class FileUtils {
             Log.e(TAG, "生成文件错误: " + e);
         }
         // 返回文件的File对象
-        Log.e("FileUtils", file.getAbsolutePath());
         return file;
     }
 
@@ -125,6 +124,5 @@ public class FileUtils {
             }
         }
         // 如果文件夹已存在，则不需要执行任何操作
-        Log.e("FileUtils", directory.getAbsolutePath());
     }
 }
