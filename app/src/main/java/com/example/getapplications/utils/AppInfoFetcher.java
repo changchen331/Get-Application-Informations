@@ -36,12 +36,12 @@ public class AppInfoFetcher {
         List<AppInfo> appList = new ArrayList<>();
         // 获取 PackageManager 实例
         PackageManager packageManager = context.getPackageManager();
-        // 获取所有应用包信息
 
         // 筛选应用
         /* 方法 1 */
         // 正则表达式（匹配'.'）
 //        Pattern pattern = Pattern.compile("\\.");
+        // 获取所有应用包信息
 //        List<PackageInfo> packages = packageManager.getInstalledPackages(PackageManager.GET_ACTIVITIES);
 //        for (PackageInfo packageInfo : packages) {
 //            try {
