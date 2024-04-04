@@ -11,11 +11,8 @@ import androidx.annotation.NonNull;
 public class AppInfo {
     private String appName; // 应用名称
     private String packageName; // 应用包名
-    private String className; // 应用类名
-    private String versionName; // 版本名称
     private Drawable appIcon; // 应用图标
-    private ActivityInfo[] activities; // 应用活动
-    private boolean isSystemApp; //是否为系统应用
+    private ActivityInfo mainActivity; // 主界面（主活动）
 
     public String getAppName() {
         return appName;
@@ -33,22 +30,6 @@ public class AppInfo {
         this.packageName = packageName;
     }
 
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    public String getVersionName() {
-        return versionName;
-    }
-
-    public void setVersionName(String versionName) {
-        this.versionName = versionName;
-    }
-
     public Drawable getAppIcon() {
         return appIcon;
     }
@@ -57,20 +38,12 @@ public class AppInfo {
         this.appIcon = appIcon;
     }
 
-    public ActivityInfo[] getActivities() {
-        return activities;
+    public ActivityInfo getMainActivity() {
+        return mainActivity;
     }
 
-    public void setActivities(ActivityInfo[] activities) {
-        this.activities = activities;
-    }
-
-    public boolean isSystemApp() {
-        return isSystemApp;
-    }
-
-    public void setSystemApp(boolean systemApp) {
-        isSystemApp = systemApp;
+    public void setMainActivity(ActivityInfo mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
     @NonNull
@@ -79,10 +52,8 @@ public class AppInfo {
         return "AppInfo{" +
                 "appName='" + appName + '\'' +
                 ", packageName='" + packageName + '\'' +
-                ", className='" + className + '\'' +
-                ", versionName='" + versionName + '\'' +
-                ", appIcon=" + appIcon.toString() + '\'' +
-                ", isSystemApp=" + isSystemApp +
+                ", appIcon=" + appIcon +
+                ", mainActivity=" + mainActivity +
                 '}';
     }
 }

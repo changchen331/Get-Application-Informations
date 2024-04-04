@@ -67,12 +67,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         // 设置应用信息
         String appName = app.getAppName();
         String packageName = app.getPackageName();
-        String className = app.getClassName();
-        String versionName = app.getVersionName();
-        String isSystemApp = app.isSystemApp() ? "是" : "否";
-
-        // 设置应用信息
-        String appInfo = "名称：" + appName + "\n" + "包名：" + packageName + "\n" + "类名：" + className + "\n" + "版本号：" + versionName + "\n" + "是否为系统应用：" + isSystemApp;
+        String mainActivity = app.getMainActivity().name;
+        String appInfo = "名称：" + appName + "\n" + "包名：" + packageName + "\n" + "主界面：" + mainActivity;
         viewHolder.appInfo.setText(appInfo);
         // 设置应用图标
         viewHolder.appIcon.setImageDrawable(app.getAppIcon());
