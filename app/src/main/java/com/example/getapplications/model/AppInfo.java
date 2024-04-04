@@ -15,7 +15,7 @@ public class AppInfo {
     private String versionName; // 版本名称
     private Drawable appIcon; // 应用图标
     private ActivityInfo[] activities; // 应用活动
-    private Boolean isSystemApp; //是否为系统应用
+    private boolean isSystemApp; //是否为系统应用
 
     public String getAppName() {
         return appName;
@@ -65,11 +65,11 @@ public class AppInfo {
         this.activities = activities;
     }
 
-    public Boolean getSystemApp() {
+    public boolean isSystemApp() {
         return isSystemApp;
     }
 
-    public void setSystemApp(Boolean systemApp) {
+    public void setSystemApp(boolean systemApp) {
         isSystemApp = systemApp;
     }
 

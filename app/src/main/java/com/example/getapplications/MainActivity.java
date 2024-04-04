@@ -3,7 +3,6 @@ package com.example.getapplications;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     private List<AppInfo> apps; // 应用信息列表
     private Integer position = 0; // 应用选择下标
 
@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
         // 应用信息滚动弹窗
         RecyclerView recyclerView = findViewById(R.id.application_information);
-
         // 获取应用数据按钮
         Button buttonGetInfo = findViewById(R.id.button_getInfo);
         buttonGetInfo.setOnClickListener(v -> {
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             writeIntoFile(MainActivity.this);
-            Toast.makeText(this, "应用信息导出完成", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "应用信息导出完成", Toast.LENGTH_SHORT).show();
         });
 
         // 跳转应用按钮
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             return appInfoFetcher.getAllInstalledApps();
         } catch (Exception e) {
             // 处理获取应用信息时可能发生的异常
-            Log.e("GetApplicationInformation", "Failed to get installed apps", e);
+            Log.e(TAG, "Failed to get installed apps", e);
             return Collections.emptyList(); // 返回空列表
         }
     }
@@ -135,13 +134,7 @@ public class MainActivity extends AppCompatActivity {
         String filePath = absolutePath + "/" + context.getString(R.string.target_directory) + "/";
 
         for (AppInfo app : apps) {
-            if (apps.indexOf(app) == 0) {
-                // 覆写
-                FileUtils.writeTxtToFile(app.toString(), filePath, context.getString(R.string.file_name), Boolean.FALSE);
-            } else {
-                // 追加
-                FileUtils.writeTxtToFile(app.toString(), filePath, context.getString(R.string.file_name), Boolean.TRUE);
-            }
+            FileUtils.writeToFile(app.toString(), filePath, context.getString(R.string.file_name), apps.indexOf(app) != 0);
         }
     }
 
@@ -152,20 +145,22 @@ public class MainActivity extends AppCompatActivity {
      * @param app     应用信息
      */
     private void openApplication(Context context, AppInfo app) {
-        PackageManager packageManager = context.getPackageManager();
-        try {
-            Intent intent = packageManager.getLaunchIntentForPackage(app.getPackageName());
-            if (intent != null) {
-                context.startActivity(intent); //启动应用
-            } else {
-                // 处理无法获取启动 Intent 的情况
-                Log.e("AppLauncher", "No launch intent found for package: " + app.getPackageName());
-                Toast.makeText(context, "无法启动应用。", Toast.LENGTH_SHORT).show();
+        // 获取应用的启动 Intent
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(app.getPackageName());
+        // 检查是否成功获取到启动 Intent
+        if (intent != null) {
+            try {
+                // 启动应用
+                context.startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                // 处理无法找到对应的 Activity 的情况
+                Log.e(TAG, "Activity not found for package: " + app.getPackageName(), e);
+                Toast.makeText(context, "没有权限启动应用。", Toast.LENGTH_SHORT).show();
             }
-        } catch (ActivityNotFoundException e) {
-            // 处理无法找到对应的 Activity 的情况
-            Log.e("AppLauncher", "Activity not found for package: " + app.getPackageName(), e);
-            Toast.makeText(context, "没有权限启动应用。", Toast.LENGTH_SHORT).show();
+        } else {
+            // 处理无法获取启动 Intent 的情况
+            Log.e(TAG, "No launch intent found for package: " + app.getPackageName());
+            Toast.makeText(context, "无法启动应用。", Toast.LENGTH_SHORT).show();
         }
     }
 }
