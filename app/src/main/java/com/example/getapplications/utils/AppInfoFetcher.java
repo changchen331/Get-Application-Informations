@@ -11,6 +11,7 @@ import android.util.Log;
 import com.example.getapplications.model.AppInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -18,7 +19,6 @@ import java.util.regex.Pattern;
  * 获取应用信息
  */
 public class AppInfoFetcher {
-
     private static final String TAG = "AppInfoFetcher";
     private final Context context;
 
@@ -28,6 +28,11 @@ public class AppInfoFetcher {
 
     @SuppressLint("QueryPermissionsNeeded")
     public List<AppInfo> getAllInstalledApps() {
+        if (context == null) {
+            // 提供一个空列表，因为没有有效的 context 来获取应用信息
+            return Collections.emptyList();
+        }
+
         // 用于存放应用数据
         List<AppInfo> appList = new ArrayList<>();
         // 获取 PackageManager 实例
